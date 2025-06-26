@@ -29,8 +29,8 @@ const (
 )
 
 type NewLabelMessage struct {
-	ImageID string `json:"image_id"`
-	Label   string `json:"label"`
+	ImageID string      `json:"image_id"`
+	Label   interface{} `json:"label"`
 }
 
 func main() {

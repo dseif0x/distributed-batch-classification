@@ -5,7 +5,7 @@ from tensorflow.keras.applications.mobilenet_v2 import decode_predictions
 from PIL import Image
 import io
 
-def classify_image(image_bytes: bytes) -> str:
+def classify_image(image_bytes: bytes) -> dict:
     # Load image from bytes
     img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
 
@@ -26,4 +26,7 @@ def classify_image(image_bytes: bytes) -> str:
     decoded = decode_predictions(preds, top=1)[0][0]  # (class_id, label, confidence)
     _, label, confidence = decoded
 
-    return f"{label} ({confidence:.2f})"
+    return {
+        "label": f"{label}",
+        "confidence": float(confidence)
+    }

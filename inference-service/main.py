@@ -69,8 +69,8 @@ async def main():
         logging.info(f"Received image for classification: {image_id}, size: {len(image_bytes)} bytes")
 
         # Simulate classification
-        label = classify_image(image_bytes)
-        label_msg = NewLabelMessage(image_id=image_id, label=label)
+        label_dict = classify_image(image_bytes)
+        label_msg = NewLabelMessage(image_id=image_id, label=label_dict)
 
         await js.publish(NEW_LABEL_SUBJECT, label_msg.to_json().encode())
         await msg.ack()
