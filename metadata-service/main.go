@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -163,6 +165,34 @@ func main() {
 		log.Fatalf("could not subscribe to email newLabelSubjectConsumer: %v", err)
 	}
 
-	// Keep the connection alive
-	select {}
+	http.HandleFunc("/images/list", func(w http.ResponseWriter, r *http.Request) {
+		res, err := collection.Find(context.TODO(), bson.M{}, options.Find().SetProjection(bson.M{"_id": 0, "image_id": 1, "label": 1}))
+		if err != nil {
+			log.Printf("Failed to retrieve images: %v", err)
+			http.Error(w, fmt.Sprintf("Failed to retrieve images: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		var images []map[string]interface{}
+		if err := res.All(context.TODO(), &images); err != nil {
+			log.Printf("Failed to decode images: %v", err)
+			http.Error(w, fmt.Sprintf("Failed to decode images: %v", err), http.StatusInternalServerError)
+			return
+		}
+		// Send the list of images as JSON response
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(images); err != nil {
+			log.Printf("Failed to encode images: %v", err)
+			http.Error(w, fmt.Sprintf("Failed to encode images: %v", err), http.StatusInternalServerError)
+			return
+		}
+		log.Println("List of images sent successfully")
+	})
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	log.Printf("Listening on port %s", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

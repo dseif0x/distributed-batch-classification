@@ -31,6 +31,8 @@ services:
       context: ./metadata-service
     container_name: metadata-service
     restart: unless-stopped
+    ports:
+      - 8012:8080
     depends_on:
       - mongo
       - nats
