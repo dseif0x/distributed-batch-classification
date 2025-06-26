@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:8
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+
+  nats:
+    image: nats
+    container_name: nats
+    restart: unless-stopped
+    ports:
+      - "4222:4222"  # Client connections
+      - "8222:8222"  # Monitoring endpoint
+    command: >
+      -js
+      -m 8222
+    volumes:
+      - nats_data:/data
+
+  metadata-service:
+    build:
+      context: ./metadata-service
+    container_name: metadata-service
+    restart: unless-stopped
+    depends_on:
+      - mongo
+      - nats
+    environment:
+      NATS_URL: nats://nats:4222
+      MONGO_URL: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongo:27017
+
+  image-registry:
+    build:
+      context: ./image-registry
+    container_name: image-registry
+    restart: unless-stopped
+    depends_on:
+      - nats
+    environment:
+      NATS_URL: nats://nats:4222
+
+volumes:
+  mongo_data:
+  nats_data:
+
