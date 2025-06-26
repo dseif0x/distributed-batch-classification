@@ -43,6 +43,8 @@ services:
       context: ./image-registry
     container_name: image-registry
     restart: unless-stopped
+    ports:
+      - 8011:8080
     depends_on:
       - nats
     environment:
