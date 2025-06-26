@@ -23,7 +23,6 @@ const (
 
 type MetaDataRequest struct {
 	ImageID string `json:"image_id"`
-	Label   string `json:"label"`
 }
 
 func main() {
@@ -93,7 +92,6 @@ func main() {
 
 		meta := MetaDataRequest{
 			ImageID: imageID,
-			Label:   "NO_LABEL",
 		}
 		// Publish metadata request
 		jsonstr, err := json.Marshal(&meta)
