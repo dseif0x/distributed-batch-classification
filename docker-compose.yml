@@ -62,6 +62,18 @@ services:
     environment:
       NATS_URL: nats://nats:4222
 
+  image-service:
+    build:
+      context: ./image-service
+    container_name: image-service
+    restart: unless-stopped
+    ports:
+      - 8013:8080
+    depends_on:
+      - nats
+    environment:
+      NATS_URL: nats://nats:4222
+
 volumes:
   mongo_data:
   nats_data:

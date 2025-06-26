@@ -81,7 +81,9 @@ func main() {
 		imageID := uuid.New().String()
 
 		// Store image in NATS Object Store
-		uploadInfo, err := store.Put(context.Background(), jetstream.ObjectMeta{Name: imageID}, file)
+		headers := make(nats.Header)
+		headers.Set("Content-Type", handler.Header.Get("Content-Type"))
+		uploadInfo, err := store.Put(context.Background(), jetstream.ObjectMeta{Name: imageID, Headers: headers}, file)
 		if err != nil {
 			http.Error(w, "Failed to store image", http.StatusInternalServerError)
 			log.Printf("ObjectStore error: %v", err)
