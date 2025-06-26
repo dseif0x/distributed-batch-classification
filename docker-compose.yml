@@ -5,7 +5,7 @@ services:
     image: traefik
     restart: unless-stopped
     ports:
-      - "8011:80"     # Expose HTTP on host port 8011
+      - "${GATEWAY_PORT:-8011}:80"     # Expose HTTP on host port 8011
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     command:
