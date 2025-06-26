@@ -17,6 +17,7 @@ import (
 )
 
 const (
+	streamName                  = "METADATA_EVENTS"
 	metaDataServiceSubject      = "images.metadata.store"
 	newLabelSubject             = "images.metadata.label"
 	mongoDatabase               = "images"
@@ -74,7 +75,7 @@ func main() {
 	}
 
 	streamConfig := jetstream.StreamConfig{
-		Name:      "METADATA_EVENTS",
+		Name:      streamName,
 		Subjects:  []string{metaDataServiceSubject, newLabelSubject},
 		Retention: jetstream.WorkQueuePolicy,
 	}
