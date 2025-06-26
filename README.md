@@ -14,7 +14,7 @@ This project is a containerized microservices system for uploading, storing, and
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/image-system.git
+git clone https://github.com/dseif0x/image-system.git
 cd image-system
 ```
 
