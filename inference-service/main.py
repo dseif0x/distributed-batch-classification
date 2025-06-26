@@ -1,7 +1,7 @@
 import asyncio
 import os
 import json
-import random
+from classify import classify_image
 import logging
 from dotenv import load_dotenv
 import nats
@@ -69,8 +69,8 @@ async def main():
         logging.info(f"Received image for classification: {image_id}, size: {len(image_bytes)} bytes")
 
         # Simulate classification
-        new_label = str(random.randint(0, 9999999))
-        label_msg = NewLabelMessage(image_id=image_id, label=new_label)
+        label = classify_image(image_bytes)
+        label_msg = NewLabelMessage(image_id=image_id, label=label)
 
         await js.publish(NEW_LABEL_SUBJECT, label_msg.to_json().encode())
         await msg.ack()

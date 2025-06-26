@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
 COPY main.py .
+COPY classify.py .
 
 # Default command
 CMD ["python", "main.py"]
