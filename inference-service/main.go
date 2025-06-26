@@ -90,7 +90,6 @@ func main() {
 	}
 
 	_, err = startClassifyConsumer.Consume(func(msg jetstream.Msg) {
-		// TODO Get Image from ObjectStore and Classify it. Currently we just simulate the classification
 		imageId := string(msg.Data())
 		imageBytes, err := store.GetBytes(context.TODO(), imageId)
 		if err != nil {
@@ -98,6 +97,8 @@ func main() {
 			return
 		}
 		log.Printf("Received image for classification: %s, size: %d bytes", imageId, len(imageBytes))
+
+		// TODO Classify the image! Currently we just simulate the classification
 
 		newLabelMsg := NewLabelMessage{
 			ImageID: imageId,

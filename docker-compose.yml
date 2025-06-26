@@ -50,6 +50,16 @@ services:
     environment:
       NATS_URL: nats://nats:4222
 
+  inference-service:
+    build:
+      context: ./inference-service
+    container_name: inference-service
+    restart: unless-stopped
+    depends_on:
+      - nats
+    environment:
+      NATS_URL: nats://nats:4222
+
 volumes:
   mongo_data:
   nats_data:
