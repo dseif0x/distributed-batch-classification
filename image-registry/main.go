@@ -22,7 +22,8 @@ const (
 )
 
 type MetaDataRequest struct {
-	ImageID string `json:"image_id"`
+	ImageID      string `json:"image_id"`
+	OriginalName string `json:"original_name,omitempty"`
 }
 
 func main() {
@@ -93,7 +94,8 @@ func main() {
 		log.Printf("Stored image %s (%s), size %d bytes", imageID, handler.Filename, uploadInfo.Size)
 
 		meta := MetaDataRequest{
-			ImageID: imageID,
+			ImageID:      imageID,
+			OriginalName: handler.Filename,
 		}
 		// Publish metadata request
 		jsonstr, err := json.Marshal(&meta)
