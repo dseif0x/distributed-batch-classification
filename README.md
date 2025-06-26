@@ -8,6 +8,7 @@ This project is a containerized microservices system for uploading, storing, and
 * `metadata-service`: Manages image metadata
 * `NATS`: Message broker for communication between services
 * `MongoDB`: Metadata storage backend
+* `Traefik`: Reverse Proxy to expose all services via a single port
 
 ## 🚀 Quick Start
 
@@ -38,9 +39,9 @@ This will start all four services along with MongoDB and NATS.
 
 | Method | URL                                 | Description                    |
 | ------ | ----------------------------------- | ------------------------------ |
-| POST   | `http://localhost:8011/upload`      | Upload a new image             |
-| GET    | `http://localhost:8012/images/list` | List all stored image metadata |
-| GET    | `http://localhost:8013/images/{id}` | Retrieve an image by its ID    |
+| POST   | `http://localhost:8011/registry/upload`      | Upload a new image             |
+| GET    | `http://localhost:8011/metadata/images/list` | List all stored image metadata |
+| GET    | `http://localhost:8011/image/images/{id}` | Retrieve an image by its ID    |
 
 ## 🔌 Architecture
 

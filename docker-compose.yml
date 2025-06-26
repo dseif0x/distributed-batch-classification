@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+  traefik:
+    image: traefik
+    restart: unless-stopped
+    ports:
+      - "8011:80"     # Expose HTTP on host port 8011
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+
   mongo:
     image: mongo:8
     container_name: mongo
@@ -31,26 +44,32 @@ services:
       context: ./metadata-service
     container_name: metadata-service
     restart: unless-stopped
-    ports:
-      - 8012:8080
     depends_on:
       - mongo
       - nats
     environment:
       NATS_URL: nats://nats:4222
       MONGO_URL: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongo:27017
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.metadata.rule=PathPrefix(`/metadata`)"
+      - "traefik.http.routers.metadata.entrypoints=web"
+      - "traefik.http.services.metadata.loadbalancer.server.port=8080"
 
   image-registry:
     build:
       context: ./image-registry
     container_name: image-registry
     restart: unless-stopped
-    ports:
-      - 8011:8080
     depends_on:
       - nats
     environment:
       NATS_URL: nats://nats:4222
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.registry.rule=PathPrefix(`/registry`)"
+      - "traefik.http.routers.registry.entrypoints=web"
+      - "traefik.http.services.registry.loadbalancer.server.port=8080"
 
   inference-service:
     build:
@@ -67,12 +86,15 @@ services:
       context: ./image-service
     container_name: image-service
     restart: unless-stopped
-    ports:
-      - 8013:8080
     depends_on:
       - nats
     environment:
       NATS_URL: nats://nats:4222
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.image.rule=PathPrefix(`/image`)"
+      - "traefik.http.routers.image.entrypoints=web"
+      - "traefik.http.services.image.loadbalancer.server.port=8080"
 
 volumes:
   mongo_data:

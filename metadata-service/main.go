@@ -165,7 +165,7 @@ func main() {
 		log.Fatalf("could not subscribe to email newLabelSubjectConsumer: %v", err)
 	}
 
-	http.HandleFunc("/images/list", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/metadata/images/list", func(w http.ResponseWriter, r *http.Request) {
 		res, err := collection.Find(context.TODO(), bson.M{}, options.Find().SetProjection(bson.M{"_id": 0, "image_id": 1, "label": 1}))
 		if err != nil {
 			log.Printf("Failed to retrieve images: %v", err)

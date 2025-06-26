@@ -48,8 +48,8 @@ func main() {
 		log.Fatalf("Failed to create object store: %v", err)
 	}
 
-	http.HandleFunc("/images/", func(w http.ResponseWriter, r *http.Request) {
-		imageId := strings.TrimPrefix(r.URL.Path, "/images/")
+	http.HandleFunc("/image/images/", func(w http.ResponseWriter, r *http.Request) {
+		imageId := strings.TrimPrefix(r.URL.Path, "/image/images/")
 		info, err := store.GetInfo(context.TODO(), imageId)
 		if err != nil {
 			log.Printf("could not get image info from object store: %v", err)

@@ -63,7 +63,7 @@ func main() {
 		log.Fatalf("Failed to create object store: %v", err)
 	}
 
-	http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/registry/upload", func(w http.ResponseWriter, r *http.Request) {
 		// Parse uploaded file
 		err := r.ParseMultipartForm(10 << 20) // 10 MB max
 		if err != nil {
