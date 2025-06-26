@@ -16,7 +16,6 @@ services:
 
   mongo:
     image: mongo:8
-    container_name: mongo
     restart: unless-stopped
     ports:
       - "27017:27017"
@@ -28,7 +27,6 @@ services:
 
   nats:
     image: nats
-    container_name: nats
     restart: unless-stopped
     ports:
       - "4222:4222"  # Client connections
@@ -42,7 +40,6 @@ services:
   metadata-service:
     build:
       context: ./metadata-service
-    container_name: metadata-service
     restart: unless-stopped
     depends_on:
       - mongo
@@ -59,7 +56,6 @@ services:
   image-registry:
     build:
       context: ./image-registry
-    container_name: image-registry
     restart: unless-stopped
     depends_on:
       - nats
@@ -74,7 +70,6 @@ services:
   inference-service:
     build:
       context: ./inference-service
-    container_name: inference-service
     restart: unless-stopped
     depends_on:
       - nats
@@ -84,7 +79,6 @@ services:
   image-service:
     build:
       context: ./image-service
-    container_name: image-service
     restart: unless-stopped
     depends_on:
       - nats
