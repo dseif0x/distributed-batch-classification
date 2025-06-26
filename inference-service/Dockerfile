@@ -1,16 +1,15 @@
-FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:1.24.3-alpine3.21 AS builder
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
-ARG TARGETOS
-ARG TARGETARCH
+FROM python:3.11-slim
 
-WORKDIR $GOPATH/src/mypackage/myapp/
-COPY ./ .
-RUN go get -d -v
-RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -ldflags="-w -s" -o /go/bin/application
+# Set working directory
+WORKDIR /app
 
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-FROM alpine:latest
-WORKDIR /go/bin
-COPY --from=builder /go/bin/application /go/bin/application
-ENTRYPOINT ["/go/bin/application"]
+# Copy source code
+COPY main.py .
+COPY classify.py .
+
+# Default command
+CMD ["python", "main.py"]

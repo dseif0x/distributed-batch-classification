@@ -179,6 +179,9 @@ func main() {
 			http.Error(w, fmt.Sprintf("Failed to decode images: %v", err), http.StatusInternalServerError)
 			return
 		}
+		if images == nil {
+			images = []map[string]interface{}{}
+		}
 		// Send the list of images as JSON response
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(images); err != nil {
